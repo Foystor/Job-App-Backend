@@ -23,6 +23,8 @@ public class JobController {
     @PostMapping
     public ResponseEntity<String> createJob(@RequestBody Job job) {
         jobService.createJob(job);
+        // error handling: if the company exists then create the job, if not then create the company first
+        // Company c = job.getCompany();
         return new ResponseEntity<>("Job added successfully", HttpStatus.CREATED);
     }
 
