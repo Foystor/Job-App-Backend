@@ -1,6 +1,7 @@
 package com.example.jobapp.company;
 
 import com.example.jobapp.job.Job;
+import com.example.jobapp.review.Review;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -20,7 +21,8 @@ public class Company {
     @JsonIgnore  // remove recursive callbacks when getting companies or jobs
     private List<Job> jobs;
 
-    // private List<Review> reviews;
+    @OneToMany(mappedBy = "company")
+    private List<Review> reviews;
 
     public Company() {
     }
@@ -55,5 +57,13 @@ public class Company {
 
     public void setJobs(List<Job> jobs) {
         this.jobs = jobs;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }
