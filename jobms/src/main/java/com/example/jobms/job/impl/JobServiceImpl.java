@@ -1,8 +1,8 @@
 package com.example.jobms.job.impl;
 
-import com.example.jobapp.job.Job;
-import com.example.jobapp.job.JobRepository;
-import com.example.jobapp.job.JobService;
+import com.example.jobms.job.Job;
+import com.example.jobms.job.JobRepository;
+import com.example.jobms.job.JobService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
