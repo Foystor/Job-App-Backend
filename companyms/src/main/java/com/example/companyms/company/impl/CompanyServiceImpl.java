@@ -1,8 +1,8 @@
 package com.example.companyms.company.impl;
 
-import com.example.jobapp.company.Company;
-import com.example.jobapp.company.CompanyRepository;
-import com.example.jobapp.company.CompanyService;
+import com.example.companyms.company.Company;
+import com.example.companyms.company.CompanyRepository;
+import com.example.companyms.company.CompanyService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,8 +47,6 @@ public class CompanyServiceImpl implements CompanyService {
             Company company = companyOptional.get();
             company.setName(updatedCompany.getName());
             company.setDescription(updatedCompany.getDescription());
-            company.setJobs(updatedCompany.getJobs());
-            company.setReviews(updatedCompany.getReviews());
             companyRepository.save(company);
             return true;
         }
