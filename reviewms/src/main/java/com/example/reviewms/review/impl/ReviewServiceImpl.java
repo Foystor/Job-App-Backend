@@ -1,10 +1,8 @@
 package com.example.reviewms.review.impl;
 
-import com.example.jobapp.company.Company;
-import com.example.jobapp.company.CompanyService;
-import com.example.jobapp.review.Review;
-import com.example.jobapp.review.ReviewRepository;
-import com.example.jobapp.review.ReviewService;
+import com.example.reviewms.review.Review;
+import com.example.reviewms.review.ReviewRepository;
+import com.example.reviewms.review.ReviewService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,12 +10,9 @@ import java.util.List;
 @Service
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
-    private final CompanyService companyService;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository,
-                             CompanyService companyService) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
-        this.companyService = companyService;
     }
 
     @Override
@@ -27,9 +22,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public boolean createReview(Long companyId, Review review) {
-        Company company = companyService.getCompanyById(companyId);
-        if (company != null) {
-            review.setCompany(company);
+        if (companyId != null && review != null) {
+            review.setCompanyId(companyId);
             reviewRepository.save(review);
             return true;
         }
@@ -37,21 +31,18 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Review getReviewById(Long companyId, Long reviewId) {
-        List<Review> reviews = reviewRepository.findByCompanyId(companyId);
-        return reviews.stream()
-                .filter(review -> review.getId().equals(reviewId))
-                .findFirst()
-                .orElse(null);
+    public Review getReviewById(Long reviewId) {
+        return reviewRepository.findById(reviewId).orElse(null);
     }
 
     @Override
-    public boolean updateReview(Long companyId, Long reviewId, Review updatedReview) {
-        Review review = getReviewById(companyId, reviewId);
+    public boolean updateReview(Long reviewId, Review updatedReview) {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
         if (review != null) {
             review.setTitle(updatedReview.getTitle());
             review.setDescription(updatedReview.getDescription());
             review.setRating(updatedReview.getRating());
+            review.setCompanyId(updatedReview.getCompanyId());
             reviewRepository.save(review);
             return true;
         }
@@ -59,15 +50,9 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public boolean deleteReview(Long companyId, Long reviewId) {
-        Review review = getReviewById(companyId, reviewId);
+    public boolean deleteReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
         if (review != null) {
-            // remove all the reference from both sides
-            Company company = review.getCompany();
-            company.getReviews().remove(review);
-            review.setCompany(null);
-
-            companyService.updateCompanyById(companyId, company);
             reviewRepository.deleteById(reviewId);
             return true;
         }
